@@ -1,0 +1,51 @@
+
+ID DE ESTUDIANTES POR CLASES PASANDO ID DE LA CLASE 
+
+select student_id from student_classes where class_id=1
+
+
+Buscar los datos de estudiantes por lista de id
+
+select * from students where student_id in (1,2)
+
+
+
+
+================================================== 
+Funcion a manera de procedimiento almacenado 
+
+
+CREATE FUNCTION listastudent2 (codClass int) RETURNS SETOF integer AS $$
+DECLARE
+_res int;
+BEGIN
+FOR _res IN SELECT student_id from student_classes where class_id=codClass
+LOOP
+RETURN NEXT _res;
+END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+========= LLAMADO ================
+
+SELECT * FROM listastudent2 (1);
+ 
+============= LLAMADO DESDE EL ROPOSITORIO ==================
+
+ @Query(value = "select * from listastudent2 (:idClas)", nativeQuery = true)
+    public List<Integer> listarIdStudenxClass(@Param("idClas") Integer idClas);
+===============================================
+
+LISTA ESTUDIANTES MATRICULADOS EN UNA CLASE 
+
+select s.* from students as s 
+inner join student_classes as sc on sc.student_id= s.student_id
+where sc.class_id=1
+
+
+================================
+
+http://localhost:8080/apistudent/v1/listStudenXIdClass/1
+
+
